@@ -1,0 +1,75 @@
+erDiagram
+    PLANEJAMENTO {
+        bigint id PK
+        varchar nome
+        varchar categoria
+        text objetivo
+        timestamp criado_em
+        timestamp atualizado_em
+    }
+
+    RESPOSTA_QUESTIONARIO {
+        bigint id PK
+        bigint planejamento_id FK
+        varchar chave_pergunta
+        text resposta
+    }
+
+    COLUNA {
+        bigint id PK
+        bigint planejamento_id FK
+        varchar titulo
+        int ordem
+    }
+
+    ATIVIDADE {
+        bigint id PK
+        bigint coluna_id FK
+        bigint capa_id FK
+        varchar titulo
+        text descricao
+        int ordem
+        varchar origem_capa
+        timestamp criado_em
+    }
+
+    COLECAO_ANEXO {
+        bigint id PK
+        bigint atividade_id FK
+        varchar titulo
+        int ordem
+    }
+
+    COLECAO_ANEXO_ITEM {
+        bigint id PK
+        bigint colecao_id FK
+        bigint anexo_id FK
+        int ordem
+    }
+
+    ANEXO {
+        bigint id PK
+        varchar nome_original
+        varchar chave_armazenamento
+        varchar tipo_mime
+        bigint tamanho_bytes
+        timestamp criado_em
+        timestamp excluido_em
+    }
+
+    IMAGEM_BIBLIOTECA {
+        bigint id PK
+        bigint anexo_id FK
+        varchar titulo
+        text_array tags
+        boolean ativa
+    }
+
+    PLANEJAMENTO ||--o{ RESPOSTA_QUESTIONARIO : possui
+    PLANEJAMENTO ||--o{ COLUNA : organiza
+    COLUNA ||--o{ ATIVIDADE : contem
+    ATIVIDADE ||--o{ COLECAO_ANEXO : possui
+    COLECAO_ANEXO ||--o{ COLECAO_ANEXO_ITEM : agrupa
+    ANEXO ||--o{ COLECAO_ANEXO_ITEM : participa
+    ANEXO o|--o{ ATIVIDADE : capa_de
+    ANEXO ||--o| IMAGEM_BIBLIOTECA : catalogado_em
